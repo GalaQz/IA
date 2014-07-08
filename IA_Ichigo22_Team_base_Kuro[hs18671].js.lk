@@ -172,8 +172,8 @@
 	var enemyPosition = getCell(enemy);
 	var distanceSansObs = getCellDistance(maPosition,enemyPosition); // distance entre moi et l'ennemi
 	
-	var rangeAway = 7 - distanceSansObs; // niveau de recul
-	var rangeToward = distanceSansObs - 7; // niveau d'avance
+	/*var rangeAway = 7 - distanceSansObs; // niveau de recul
+	var rangeToward = distanceSansObs - 7; // niveau d'avance*/
 	
 	/*var enemyWeapon = getWeapon(enemy);
 	var isEnemyWeaponInline = isInlineWeapon(enemyWeapon);
