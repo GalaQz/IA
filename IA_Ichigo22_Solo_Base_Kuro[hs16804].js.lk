@@ -1,0 +1,142 @@
+//--------------------------------
+//------- Code de base -----------
+//--------------------------------	
+	function utiliserCasque(moi,cdCasque)
+	{
+		useChip(CHIP_HELMET, moi);
+		cdCasque = 4;
+	}
+	
+	function meSoigner(moi,pv)
+	{
+		if((getLife()/getTotalLife())<pv)
+		{
+			useChip(CHIP_BANDAGE, moi);
+			return 1;
+		}
+		else return 0;
+	}
+	
+	function utiliserGlace(en)
+	{
+		moveTowardCell(getCellToUseChip(CHIP_ICE,en));
+		useChip(CHIP_ICE, en);
+		useChip(CHIP_ICE, en);
+	}
+	
+	function seMettreAPorter(en,m,cdCasque)
+	{
+		var uw = getCellToUseWeapon(en);
+		moveTowardCell(uw);
+		if(getCell(m)==uw)
+		{
+		useWeapon(en);
+		useWeapon(en);
+		}
+		else
+		{
+			if(cdCasque==0)
+			{
+				utiliserCasque(m,cdCasque);
+			}
+		}
+	}
+	
+	function resterAPorter(en,m,cdCasque)
+	{
+		var uw = getCellToUseWeapon(en);
+		moveTowardCell(uw);
+		if(getCell(m)==uw)
+		{
+		useWeapon(en);
+		useWeapon(en);
+		}
+		else
+		{
+			if(cdCasque==0)
+			{
+				utiliserCasque(m,cdCasque);
+			}
+		}
+		moveAwayFrom(en);
+	}
+	
+	/*function eviterX(mp,en)
+	{
+		var mpx = getCellX(mp);
+		var mpy = getCellY(mp);
+		var newCell = getCellFromXY(mpx-(getMP()-(getMP()-1)),mpy);
+		useWeapon(en);
+		useWeapon(en);
+		moveTowardCell(newCell);
+	}
+	
+	function eviterY(mp,en)
+	{
+		var mpx = getCellX(mp);
+		var mpy = getCellY(mp);
+		var newCell = getCellFromXY(mpx,mpy-(getMP()-(getMP()-1)));
+		useWeapon(en);
+		useWeapon(en);
+		moveTowardCell(newCell);
+	}*/
+	
+	global enemy;
+	global moi;
+	global cdCasque;
+	
+	if(getWeapon()==-1)
+	{
+		setWeapon(WEAPON_PISTOL); //si pas d'arme équipé, équiper arme
+		moi = getLeek();
+		cdCasque=0;
+	}
+	
+	enemy = getNearestEnemy();
+	var maPosition = getCell(moi);
+	var enemyPosition = getCell(enemy);
+	var distanceSansObs = getCellDistance(maPosition,enemyPosition); // distance entre moi et l'ennemi
+	
+	
+	// var rangeAway = 7 - distanceSansObs; // niveau de recul
+	// var rangeToward = distanceSansObs - 7; // niveau d'avance
+	
+	/*var enemyWeapon = getWeapon(enemy);
+	var isEnemyWeaponInline = isInlineWeapon(enemyWeapon);
+	var onSameLine = isOnSameLine(maPosition, enemyPosition);
+	if(onSameLine && isEnemyWeaponInline && (distanceSansObs<8))
+	{
+		if( (maPosition - enemyPosition) % 17 == 0 )
+		{
+			//debug(" bouger sur x ");
+			eviterX(maPosition,enemy);
+		}
+		else if( (maPosition - enemyPosition) % 18 == 0 )
+		{
+			//debug(" bouger sur y ");
+			eviterY(maPosition,enemy);
+		}
+	}*/
+	if(distanceSansObs > 12 && distanceSansObs < 18 && cdCasque == 0)
+	{
+		utiliserCasque(moi,cdCasque);
+	}
+	if(distanceSansObs == 12)
+	{
+		utiliserGlace(enemy);
+	}
+	else if(distanceSansObs > 7) // se mettre à porté
+	{
+		if(cdCasque==0) utiliserCasque(moi,cdCasque);
+		if((getLife()/getTotalLife())<=0.40) meSoigner(moi,0.5);
+		seMettreAPorter(enemy,moi,cdCasque);
+	}
+	else 	// rester à bonne porté
+	{
+		if(cdCasque==0) utiliserCasque(moi,cdCasque);
+		if((getLife()/getTotalLife())<=0.40) meSoigner(moi,0.5);
+		resterAPorter(enemy,moi,cdCasque);
+	}
+	meSoigner(moi,1);
+	cdCasque = max(cdCasque-1,0);
+	//debug("Distance : " + distanceSansObs);
