@@ -139,4 +139,3 @@
 	}
 	meSoigner(moi,1);
 	cdCasque = max(cdCasque-1,0);
-	//debug("Distance : " + distanceSansObs);
