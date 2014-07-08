@@ -1,0 +1,56 @@
+//--------------------------------
+//------- Code de base -----------
+//--------------------------------
+
+//moi
+var moi = getLeek();
+
+// On récupère l'ennemi le plus proche
+var enemy = getNearestEnemy();
+
+// On prend le pistolet
+if(getWeapon()==-1)  setWeapon(WEAPON_PISTOL); // Attention : coûte 1 PT
+
+//determiner ma position et la position ennemie
+var MaPosition = getCell(moi);
+var EnemyPosition = getCell(enemy);
+
+//calcul la distance moi = ennemie
+var Distance = getCellDistance(MaPosition,EnemyPosition);
+
+//definir la cellule ou je peux tirer a l'arme
+var ShootSpot = getCellToUseWeapon(enemy); 
+
+//definir la cellule ou je peux tirer
+
+//Séquence de tir
+
+//Verifier la distance avant de tirer
+if (Distance <= 7)
+{
+debug ("ma position"+MaPosition);
+debug ("cellule de tir"+ShootSpot);
+	//SI portée ok, deux tir
+	if (ShootSpot == MaPosition)
+	{
+		useWeapon(enemy);
+		useWeapon(enemy);
+	}
+	//SINON se mettre a portée et essayer de tirer
+	else
+	{
+		moveTowardCell(ShootSpot,Distance-7);
+		useWeapon(enemy);
+		useWeapon(enemy);
+	}
+}
+//Pas a portée : Me rapprocher et faire action
+else
+{
+	moveTowardCell(ShootSpot,Distance-7);
+	useWeapon(enemy);
+	useWeapon(enemy);
+}
+
+//DEBUG
+debug("PV adverses"+getLife(enemy));
