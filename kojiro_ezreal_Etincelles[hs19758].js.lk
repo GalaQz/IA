@@ -1,0 +1,67 @@
+//--------------------------------
+//------- Code de base -----------
+//--------------------------------
+
+//-----------DECLARATION-------------//
+
+//Definir les poireaux sur la map
+global moi = getLeek();
+global enemy = getNearestEnemy();
+
+// prendre pistolet
+if(getWeapon()==-1)  setWeapon(WEAPON_PISTOL);
+
+//determiner ma position et la position ennemie
+var MaPosition = getCell(moi);
+var EnemyPosition = getCell(enemy);
+
+//calcul de la distance moi = ennemie
+var Distance = getCellDistance(MaPosition,EnemyPosition);
+
+//definir la cellule ou je peux utiliser puces / armes
+var ShootSpotSpark = getCellToUseChip(CHIP_SPARK,enemy); 
+var ShootSpotWpn = getCellToUseWeapon(enemy);
+
+//se mettre a 15 cases de l'adversaire
+//if (Distance-4 <15)
+//moveAwayFrom(enemy,15-(Distance-4));
+
+//else
+//moveToward(ShootSpotSpark);
+
+//-----------PHASE DE TIR-------------//
+
+//Me placer a distance de tir
+if(Distance>10)
+{
+moveTowardCell(ShootSpotSpark);
+useChip(CHIP_SPARK,enemy);
+useChip(CHIP_SPARK,enemy);
+moveAwayFrom(enemy);
+}
+//penser a rajouter une séquence de buff/soin si je ne suis pas a portée
+		
+if(Distance<=10&&Distance>7)
+//SI portée ok, deux tir
+{
+useChip(CHIP_SPARK,enemy);
+useChip(CHIP_SPARK,enemy);
+moveTowardCell(ShootSpotWpn);
+}	
+// Si je suis a distance de pistolet, tirer avec le pistolet
+if(Distance<=7)
+{
+useWeapon(enemy);
+useWeapon(enemy);
+moveAwayFrom(enemy);
+}	
+// Si je ne touche pas avec le pistolet, j'utilise etincelle
+if(useWeapon(enemy)==USE_INVALID_POSITION)
+{
+useChip(CHIP_SPARK,enemy);
+useChip(CHIP_SPARK,enemy);
+}
+
+//-----------FIN DE TOUR-------------//
+
+//DEBUG
